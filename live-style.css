@@ -1516,16 +1516,163 @@ body {
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 
-/* Responsive */
+/* ===========================
+   Responsive Layouts (Galaxy S25 & Mobile Tailored)
+   =========================== */
+
 @media (max-width: 1200px) {
     .dashboard {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
         height: auto;
+        overflow-y: visible;
     }
-    .chart-panel { min-height: 400px; }
-    .chain-panel { min-height: 500px; }
+    .chart-panel { min-height: 380px; height: 380px; }
+    .chain-panel { min-height: 500px; height: 520px; }
     .strategy-panel { min-height: 300px; }
     .greeks-panel { min-height: 400px; }
-    .top-center { display: none; }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        height: auto;
+        min-height: 52px;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+    }
+    .top-left {
+        flex: 1;
+        min-width: 130px;
+    }
+    .top-right {
+        flex: 1;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+    .market-meta {
+        display: none; /* Hide VIX/PCR in header on mobile to prevent squishing */
+    }
+    .clock {
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    .connect-btn {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    .back-link {
+        display: none; /* Simplify top navigation on phone screens */
+    }
+    .top-center {
+        display: flex;
+        width: 100%;
+        order: 3;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 6px;
+    }
+    .index-tabs {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+    .index-tab {
+        flex: 1;
+        min-width: 95px;
+        padding: 6px 4px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+    }
+    .tab-name { font-size: 9px; }
+    .tab-price { font-size: 12px; }
+    .tab-change { font-size: 9px; }
+
+    .dashboard {
+        padding-top: 105px; /* Offset for two-row wrapped top bar on mobile */
+        padding-bottom: 30px;
+        gap: 6px;
+        height: auto;
+    }
+    .panel {
+        border-radius: 10px;
+        margin-bottom: 4px;
+    }
+    .chart-panel { min-height: 320px; height: 320px; }
+    .chain-panel { min-height: 460px; height: 480px; }
+    
+    .chain-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .chain-table { font-size: 10px; }
+    
+    .strategy-item {
+        grid-template-columns: auto 1fr auto auto;
+        gap: 8px;
+        padding: 10px;
+    }
+    .strat-type { font-size: 18px; }
+    .strat-name { font-size: 12px; }
+    .strat-detail { font-size: 9px; }
+    .strat-pnl { font-size: 14px; }
+    
+    .builder-row {
+        flex-wrap: wrap;
+    }
+    .builder-row > select, .builder-row > input {
+        flex: 1 1 35%;
+    }
+    
+    .greeks-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    .broker-options {
+        grid-template-columns: 1fr;
+    }
+    .modal {
+        width: 92vw;
+        max-height: 88vh;
+    }
+    .modal-body {
+        padding: 16px;
+    }
+}
+
+/* Galaxy S25 / Narrow Phone Optimization (<= 480px) */
+@media (max-width: 480px) {
+    /* Hide Volume and IV columns so OI, Chg OI, LTP, Chg, and STRIKE fit cleanly on screen without horizontal scrolling! */
+    .chain-table thead .sub-header th:nth-child(3),
+    .chain-table thead .sub-header th:nth-child(4),
+    .chain-table thead .sub-header th:nth-child(10),
+    .chain-table thead .sub-header th:nth-child(11),
+    .chain-table tbody td:nth-child(3),
+    .chain-table tbody td:nth-child(4),
+    .chain-table tbody td:nth-child(10),
+    .chain-table tbody td:nth-child(11) {
+        display: none;
+    }
+    
+    .panel-header {
+        padding: 8px 10px;
+    }
+    .panel-header h2 {
+        font-size: 12px;
+    }
+    .chart-controls button, .chain-controls button, .small-select {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+    .top-left { min-width: 110px; }
+    .logo-text { font-size: 13px; }
+    .status-text { font-size: 9px; }
 }
