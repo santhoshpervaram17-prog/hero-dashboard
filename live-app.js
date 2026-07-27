@@ -314,7 +314,7 @@ function initIndexTabs() {
                 fetchLiveChartHistory(activeIndex, activeTimeframe).then(() => {
                     drawChart();
                 });
-                fetchLiveOptionChain(activeIndex, document.getElementById('expiry-select')?.value || '').then(() => {
+                fetchLiveOptionChain(activeIndex, '').then(() => {
                     populateStrikeSelectors();
                     updateUI();
                 });
@@ -1488,6 +1488,9 @@ async function fetchLiveOptionChain(indexName, timestamp = '') {
     } catch (ocErr) {
         console.warn('[Fyers] Option chain fetch error:', ocErr.message);
     }
+    // If live fetch fails or returns empty, regenerate realistic chain for the currently selected index so it never gets stuck on old strikes
+    console.warn(`[Fyers] Falling back to generated option chain for ${indexSymbol}`);
+    chainDataCache = generateOptionChainData();
     return false;
 }
 
