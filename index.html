@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Strike Finder | Options Expiry Strategy Analyzer</title>
+    <meta name="description" content="Identify the winning options strike on expiry day for Nifty, Sensex, and BankNifty. Explore hedging strategies and combinations.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="bg-grid"></div>
+<div class="floating-orb orb-1"></div>
+<div class="floating-orb orb-2"></div>
+<div class="floating-orb orb-3"></div>
+
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="brand-icon">◆</span>
+        <span class="brand-text">Hero Strike</span>
+        <span class="brand-badge">PRO</span>
+    </div>
+    <div class="nav-links">
+        <a href="#concept" class="nav-link active">Concept</a>
+        <a href="#why-fail" class="nav-link">Why Traders Fail</a>
+        <a href="#strategies" class="nav-link">Strategies</a>
+        <a href="#simulator" class="nav-link">Simulator</a>
+        <a href="#playbook" class="nav-link">Playbook</a>
+        <a href="live.html" class="nav-link" style="background: linear-gradient(135deg, rgba(255,82,82,0.15), rgba(68,138,255,0.15)); border: 1px solid rgba(255,82,82,0.3); color: #ff5252; font-weight: 700;">🔴 LIVE Dashboard</a>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="hero-section" id="concept">
+    <div class="hero-content">
+        <div class="hero-badge">OPTIONS EXPIRY MASTERY</div>
+        <h1 class="hero-title">
+            One Strike Becomes <span class="gradient-text">Hero</span>,<br>
+            The Other Goes to <span class="zero-text">Zero</span>
+        </h1>
+        <p class="hero-subtitle">
+            On every expiry, the market picks a direction. One side of the option chain surges — 
+            the other expires worthless. Master the art of identifying the winning strike and 
+            hedging your bets across <strong>Nifty</strong>, <strong>Sensex</strong>, and <strong>BankNifty</strong>.
+        </p>
+        <div class="hero-stats">
+            <div class="stat-card">
+                <div class="stat-number">₹12L Cr+</div>
+                <div class="stat-label">Monthly Options Volume</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Options Expire Worthless</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">52</div>
+                <div class="stat-label">Weekly Expiries/Year</div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="option-chain-visual">
+            <div class="chain-header">
+                <span class="chain-ce">CALLS (CE)</span>
+                <span class="chain-strike">STRIKE</span>
+                <span class="chain-pe">PUTS (PE)</span>
+            </div>
+            <div class="chain-row hero-row" id="hero-row-1">
+                <span class="chain-val ce-val rising">↑ 450.00</span>
+                <span class="chain-strike-val">24,500</span>
+                <span class="chain-val pe-val falling">↓ 2.10</span>
+            </div>
+            <div class="chain-row" id="hero-row-2">
+                <span class="chain-val ce-val rising">↑ 350.25</span>
+                <span class="chain-strike-val">24,600</span>
+                <span class="chain-val pe-val falling">↓ 5.50</span>
+            </div>
+            <div class="chain-row atm-row" id="hero-row-3">
+                <span class="chain-val ce-val rising">↑ 255.80</span>
+                <span class="chain-strike-val atm">24,700 ATM</span>
+                <span class="chain-val pe-val falling">↓ 12.30</span>
+            </div>
+            <div class="chain-row" id="hero-row-4">
+                <span class="chain-val ce-val rising">↑ 165.00</span>
+                <span class="chain-strike-val">24,800</span>
+                <span class="chain-val pe-val falling">↓ 28.75</span>
+            </div>
+            <div class="chain-row" id="hero-row-5">
+                <span class="chain-val ce-val dim">↓ 80.50</span>
+                <span class="chain-strike-val">24,900</span>
+                <span class="chain-val pe-val dim">↓ 65.00</span>
+            </div>
+            <div class="chain-label-hero">
+                <span class="hero-arrow">← HERO</span>
+                <span class="zero-arrow">ZERO →</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- The Core Concept -->
+<section class="section concept-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">THE FUNDAMENTAL TRUTH</span>
+            <h2>Understanding the Hero & Zero Dynamic</h2>
+        </div>
+        <div class="concept-grid">
+            <div class="concept-card bullish-card">
+                <div class="concept-icon">📈</div>
+                <h3>If Market Goes UP</h3>
+                <div class="concept-detail">
+                    <div class="result hero-result">
+                        <span class="result-label">CALL (CE)</span>
+                        <span class="result-badge hero-badge-sm">HERO ★</span>
+                    </div>
+                    <p>ITM Calls gain massive intrinsic value. Deep ITM calls can give 10x-100x returns on expiry day.</p>
+                    <div class="result zero-result">
+                        <span class="result-label">PUT (PE)</span>
+                        <span class="result-badge zero-badge-sm">ZERO ✗</span>
+                    </div>
+                    <p>All Puts below the market level expire worthless. Premium paid = 100% loss.</p>
+                </div>
+            </div>
+            <div class="concept-card bearish-card">
+                <div class="concept-icon">📉</div>
+                <h3>If Market Goes DOWN</h3>
+                <div class="concept-detail">
+                    <div class="result hero-result">
+                        <span class="result-label">PUT (PE)</span>
+                        <span class="result-badge hero-badge-sm">HERO ★</span>
+                    </div>
+                    <p>ITM Puts gain massive intrinsic value. A 500-point fall can turn ₹10 into ₹500.</p>
+                    <div class="result zero-result">
+                        <span class="result-label">CALL (CE)</span>
+                        <span class="result-badge zero-badge-sm">ZERO ✗</span>
+                    </div>
+                    <p>All Calls above the market level expire worthless. Premium paid = 100% loss.</p>
+                </div>
+            </div>
+            <div class="concept-card sideways-card">
+                <div class="concept-icon">↔️</div>
+                <h3>If Market is SIDEWAYS</h3>
+                <div class="concept-detail">
+                    <div class="result zero-result">
+                        <span class="result-label">BOTH CE & PE</span>
+                        <span class="result-badge zero-badge-sm">ZERO ✗</span>
+                    </div>
+                    <p>This is the nightmare scenario for buyers — BOTH sides can expire worthless if market stays flat near ATM strike!</p>
+                    <div class="result hero-result">
+                        <span class="result-label">SELLERS WIN</span>
+                        <span class="result-badge hero-badge-sm">HERO ★</span>
+                    </div>
+                    <p>Option sellers (writers) collect premium from both sides. Theta decay is the real hero here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Traders Fail -->
+<section class="section fail-section" id="why-fail">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge danger-badge">WHY 90% FAIL</span>
+            <h2>The 7 Fatal Mistakes on Expiry Day</h2>
+        </div>
+        <div class="mistakes-grid">
+            <div class="mistake-card" data-number="01">
+                <div class="mistake-header">
+                    <span class="mistake-num">01</span>
+                    <h3>Buying Only One Side</h3>
+                </div>
+                <p>Traders pick either CE or PE based on "gut feeling". It's a 50-50 gamble with 100% risk of premium paid. Without hedging, you're just gambling.</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 95%"></div>
+                    <span class="impact-pct">95% Loss Rate</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="02">
+                <div class="mistake-header">
+                    <span class="mistake-num">02</span>
+                    <h3>Ignoring Theta Decay</h3>
+                </div>
+                <p>On expiry day, time value erodes rapidly (Theta crush). An ATM option losing ₹5-10 per minute in the last hour! Buyers underestimate this destruction.</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 90%"></div>
+                    <span class="impact-pct">90% Premium Lost</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="03">
+                <div class="mistake-header">
+                    <span class="mistake-num">03</span>
+                    <h3>Wrong Strike Selection</h3>
+                </div>
+                <p>Buying deep OTM options because they're "cheap". They need a huge move to become profitable. Probability of profit is extremely low (~5-10%).</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 85%"></div>
+                    <span class="impact-pct">85% Wasted</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="04">
+                <div class="mistake-header">
+                    <span class="mistake-num">04</span>
+                    <h3>No Stop Loss / Exit Plan</h3>
+                </div>
+                <p>Holding losing positions hoping for a reversal. On expiry, there's no time for recovery. Dead options stay dead.</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 80%"></div>
+                    <span class="impact-pct">80% Avoidable</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="05">
+                <div class="mistake-header">
+                    <span class="mistake-num">05</span>
+                    <h3>Over-leveraging</h3>
+                </div>
+                <p>Putting too much capital in a single expiry trade. One wrong move wipes out weeks of profits. Position sizing is ignored.</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 88%"></div>
+                    <span class="impact-pct">88% Blown Accounts</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="06">
+                <div class="mistake-header">
+                    <span class="mistake-num">06</span>
+                    <h3>Not Hedging the Trade</h3>
+                </div>
+                <p>Single-leg positions have unlimited risk (selling) or 100% premium risk (buying). Spreads and hedges reduce risk dramatically but traders skip them for "max profit".</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 92%"></div>
+                    <span class="impact-pct">92% Preventable</span>
+                </div>
+            </div>
+            <div class="mistake-card" data-number="07">
+                <div class="mistake-header">
+                    <span class="mistake-num">07</span>
+                    <h3>Emotional Trading</h3>
+                </div>
+                <p>FOMO, revenge trading, averaging losers — all amplified on expiry day due to rapid price movements. Discipline breaks down when options move 500% in minutes.</p>
+                <div class="mistake-impact">
+                    <span class="impact-label">Impact:</span>
+                    <div class="impact-bar" style="--impact: 75%"></div>
+                    <span class="impact-pct">75% of Losses</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Strategy Combinations -->
+<section class="section strategies-section" id="strategies">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge success-badge">WINNING STRATEGIES</span>
+            <h2>All Strategy Combinations & Hedges</h2>
+            <p class="section-desc">Click any strategy to see detailed breakdown, P&L profile, and when to use it</p>
+        </div>
+
+        <!-- Strategy Filter -->
+        <div class="strategy-filters">
+            <button class="filter-btn active" data-filter="all">All Strategies</button>
+            <button class="filter-btn" data-filter="buying">Buying Based</button>
+            <button class="filter-btn" data-filter="selling">Selling Based</button>
+            <button class="filter-btn" data-filter="neutral">Market Neutral</button>
+            <button class="filter-btn" data-filter="directional">Directional</button>
+        </div>
+
+        <div class="strategies-grid" id="strategies-grid">
+
+            <!-- Strategy 1: Long Straddle -->
+            <div class="strategy-card" data-category="buying neutral" data-strategy="straddle">
+                <div class="strategy-header">
+                    <div class="strategy-icon straddle-icon">⚡</div>
+                    <div class="strategy-meta">
+                        <h3>Long Straddle</h3>
+                        <span class="strategy-tag buying-tag">BUYING</span>
+                        <span class="strategy-tag neutral-tag">NON-DIRECTIONAL</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Hero Catch Rate</span>
+                        <span class="rating-value high">85%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM Call (CE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM Put (PE)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Unlimited</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">CE + PE Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">Strike ± Total Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Big move expected, direction unknown</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-straddle"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Why it catches the Hero:</strong> You own both sides. Whichever becomes hero, you profit. The hero side's gain must exceed total premium paid on both sides.</p>
+                        <p><strong>⚠️ Risk:</strong> If market doesn't move enough, BOTH sides lose value (theta crush). Expensive on expiry day due to high premiums.</p>
+                        <p><strong>💡 Pro Tip:</strong> Enter 1-2 days before expiry when premiums are lower. Exit the losing leg early to recover some premium.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 2: Long Strangle -->
+            <div class="strategy-card" data-category="buying neutral" data-strategy="strangle">
+                <div class="strategy-header">
+                    <div class="strategy-icon strangle-icon">🔀</div>
+                    <div class="strategy-meta">
+                        <h3>Long Strangle</h3>
+                        <span class="strategy-tag buying-tag">BUYING</span>
+                        <span class="strategy-tag neutral-tag">NON-DIRECTIONAL</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Hero Catch Rate</span>
+                        <span class="rating-value medium">70%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x OTM Call (CE) — Above ATM</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x OTM Put (PE) — Below ATM</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Unlimited</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">CE + PE Premium (lower than Straddle)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">Upper Strike + Premium / Lower Strike - Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Expecting very large move, budget-friendly</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-strangle"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Advantage:</strong> Cheaper than straddle. Lower cost = lower breakeven amount needed.</p>
+                        <p><strong>⚠️ Risk:</strong> Needs a BIGGER move than straddle to profit. If market stays in the range between strikes, both expire zero.</p>
+                        <p><strong>💡 Pro Tip:</strong> Use on event days (Budget, RBI policy, Election results) when 300-500 point moves are likely.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 3: Bull Call Spread -->
+            <div class="strategy-card" data-category="buying directional" data-strategy="bullcall">
+                <div class="strategy-header">
+                    <div class="strategy-icon bull-icon">🐂</div>
+                    <div class="strategy-meta">
+                        <h3>Bull Call Spread</h3>
+                        <span class="strategy-tag buying-tag">HEDGE</span>
+                        <span class="strategy-tag directional-tag">BULLISH</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Risk:Reward</span>
+                        <span class="rating-value high">1:2 to 1:5</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM/Slight OTM Call (CE)</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x Higher Strike Call (CE)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Strike Diff − Net Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Net Premium Paid</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">Lower Strike + Net Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Mildly bullish, want defined risk</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-bullcall"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Best for Hero Calls:</strong> If you think CALLS will be hero, this caps your risk. Sold call funds part of the bought call.</p>
+                        <p><strong>⚠️ Trade-off:</strong> Profit is capped at the difference between strikes. You sacrifice unlimited upside for defined risk.</p>
+                        <p><strong>💡 Pro Tip:</strong> Choose strikes 100-200 points apart on Nifty. Wider spread = more profit potential but higher cost.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 4: Bear Put Spread -->
+            <div class="strategy-card" data-category="buying directional" data-strategy="bearput">
+                <div class="strategy-header">
+                    <div class="strategy-icon bear-icon">🐻</div>
+                    <div class="strategy-meta">
+                        <h3>Bear Put Spread</h3>
+                        <span class="strategy-tag buying-tag">HEDGE</span>
+                        <span class="strategy-tag directional-tag">BEARISH</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Risk:Reward</span>
+                        <span class="rating-value high">1:2 to 1:5</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM/Slight OTM Put (PE)</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x Lower Strike Put (PE)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Strike Diff − Net Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Net Premium Paid</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">Upper Strike − Net Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Mildly bearish, want defined risk</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-bearput"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Best for Hero Puts:</strong> If you think PUTS will be hero, this is your go-to. Defined risk, good R:R ratio.</p>
+                        <p><strong>⚠️ Trade-off:</strong> Capped profit. In a crash, a naked put would make much more, but the risk is also much higher.</p>
+                        <p><strong>💡 Pro Tip:</strong> Use 100-200 point spread on Nifty, 200-500 on BankNifty for optimal risk:reward.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 5: Iron Condor -->
+            <div class="strategy-card" data-category="selling neutral" data-strategy="ironcondor">
+                <div class="strategy-header">
+                    <div class="strategy-icon condor-icon">🦅</div>
+                    <div class="strategy-meta">
+                        <h3>Iron Condor</h3>
+                        <span class="strategy-tag selling-tag">SELLING</span>
+                        <span class="strategy-tag neutral-tag">NON-DIRECTIONAL</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Win Rate</span>
+                        <span class="rating-value high">65-70%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Call (CE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x Higher OTM Call (CE) — Protection</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Put (PE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x Lower OTM Put (PE) — Protection</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Net Premium Received</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Spread Width − Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">Sold Strikes ± Net Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Range-bound market, low volatility</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-ironcondor"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ The Sideways Hero Killer:</strong> When NEITHER side becomes hero, YOU win. Profits from time decay and range-bound markets.</p>
+                        <p><strong>⚠️ Risk:</strong> If there IS a hero (big move), you lose. But loss is capped thanks to the bought protection legs.</p>
+                        <p><strong>💡 Pro Tip:</strong> Place sold strikes at 1 standard deviation from ATM. On Nifty, that's roughly ±200-300 points on expiry day.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 6: Iron Butterfly -->
+            <div class="strategy-card" data-category="selling neutral" data-strategy="ironbutterfly">
+                <div class="strategy-header">
+                    <div class="strategy-icon butterfly-icon">🦋</div>
+                    <div class="strategy-meta">
+                        <h3>Iron Butterfly</h3>
+                        <span class="strategy-tag selling-tag">SELLING</span>
+                        <span class="strategy-tag neutral-tag">NON-DIRECTIONAL</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Win Rate</span>
+                        <span class="rating-value medium">55-60%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x ATM Call (CE)</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x ATM Put (PE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x OTM Call (CE) — Protection</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x OTM Put (PE) — Protection</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Net Premium (Higher than Condor)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Wing Width − Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Breakeven</span>
+                            <span class="info-value">ATM ± Net Premium Received</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Expecting market to close at ATM strike</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-ironbutterfly"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Maximum Premium Collection:</strong> Sells ATM options (highest premium) with OTM protection. Higher reward than Iron Condor.</p>
+                        <p><strong>⚠️ Risk:</strong> Narrower profit zone. Any significant move hurts. Needs market to expire very close to ATM strike.</p>
+                        <p><strong>💡 Pro Tip:</strong> Perfect for "pinning" near round numbers. Nifty often pins to strikes ending in 00 or 50.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 7: Ratio Spread -->
+            <div class="strategy-card" data-category="selling directional" data-strategy="ratio">
+                <div class="strategy-header">
+                    <div class="strategy-icon ratio-icon">⚖️</div>
+                    <div class="strategy-meta">
+                        <h3>Ratio Back Spread</h3>
+                        <span class="strategy-tag buying-tag">HEDGE</span>
+                        <span class="strategy-tag directional-tag">DIRECTIONAL</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Hero Catch</span>
+                        <span class="rating-value high">90%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x ITM/ATM Call (CE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">2x OTM Call (CE) — Double Quantity</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Unlimited (upside)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Limited (between strikes)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Cost</span>
+                            <span class="info-value">Zero or Small Credit</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Expecting big move in one direction</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-ratio"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Zero-Cost Hero Catcher:</strong> The sold option funds the two bought options. If the hero appears, you have 2x exposure!</p>
+                        <p><strong>⚠️ Risk:</strong> If market moves slightly, you're stuck in the loss zone between strikes. Best avoided on sideways days.</p>
+                        <p><strong>💡 Pro Tip:</strong> Use 1:2 ratio (sell 1, buy 2). Enter for zero cost or small credit. Works amazingly on trending expiry days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 8: Jade Lizard -->
+            <div class="strategy-card" data-category="selling directional" data-strategy="jade">
+                <div class="strategy-header">
+                    <div class="strategy-icon jade-icon">🦎</div>
+                    <div class="strategy-meta">
+                        <h3>Jade Lizard</h3>
+                        <span class="strategy-tag selling-tag">SELLING</span>
+                        <span class="strategy-tag directional-tag">MILDLY BULLISH</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Win Rate</span>
+                        <span class="rating-value high">70%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Put (PE)</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Call (CE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x Higher OTM Call (CE)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Total Premium Received</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Upside Risk</span>
+                            <span class="info-value">ZERO (if premium > spread width)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Downside Risk</span>
+                            <span class="info-value loss">Put Strike − Premium</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Neutral to mildly bullish outlook</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-jade"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ No Upside Risk:</strong> If constructed correctly, there's ZERO risk on the upside. Only risk is a big fall.</p>
+                        <p><strong>⚠️ Risk:</strong> Downside is open (like selling a naked put). Use only when you're comfortable being assigned.</p>
+                        <p><strong>💡 Pro Tip:</strong> Ensure call spread premium + put premium > call spread width. This eliminates upside risk entirely.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 9: Straddle + Hedge -->
+            <div class="strategy-card" data-category="buying neutral" data-strategy="straddle-hedge">
+                <div class="strategy-header">
+                    <div class="strategy-icon shield-icon">🛡️</div>
+                    <div class="strategy-meta">
+                        <h3>Hedged Straddle (The Hero Catcher)</h3>
+                        <span class="strategy-tag buying-tag">BUYING</span>
+                        <span class="strategy-tag neutral-tag">ULTIMATE HEDGE</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Hero Catch Rate</span>
+                        <span class="rating-value high">95%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM Call (CE)</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x ATM Put (PE)</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Call (CE) — Reduces Cost</span>
+                        </div>
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x OTM Put (PE) — Reduces Cost</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">Spread Width − Net Cost</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Net Premium (Much Lower!)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Cost</span>
+                            <span class="info-value">40-60% cheaper than naked straddle</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">★ BEST EXPIRY DAY STRATEGY ★</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-hedged-straddle"></div>
+                    <div class="strategy-verdict best-verdict">
+                        <p><strong>⭐ THE RECOMMENDED APPROACH:</strong> This is a Straddle + Iron Condor hybrid. Buy ATM options on both sides, sell OTM options to reduce cost.</p>
+                        <p><strong>✅ Why it works:</strong> You catch the hero on either side. The sold OTM options reduce your cost by 40-60%. Even moderate moves become profitable.</p>
+                        <p><strong>💡 Example:</strong> Nifty at 24,700. Buy 24700 CE+PE for ₹400. Sell 24900 CE + 24500 PE for ₹160. Net cost = ₹240. Need only 240pt move to profit!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy 10: Calendar/Diagonal -->
+            <div class="strategy-card" data-category="buying directional" data-strategy="calendar">
+                <div class="strategy-header">
+                    <div class="strategy-icon calendar-icon">📅</div>
+                    <div class="strategy-meta">
+                        <h3>Calendar Spread</h3>
+                        <span class="strategy-tag buying-tag">HEDGE</span>
+                        <span class="strategy-tag neutral-tag">THETA PLAY</span>
+                    </div>
+                    <div class="strategy-rating">
+                        <span class="rating-label">Consistency</span>
+                        <span class="rating-value medium">60%</span>
+                    </div>
+                </div>
+                <div class="strategy-body">
+                    <div class="strategy-legs">
+                        <div class="leg sell-leg">
+                            <span class="leg-action">SELL</span>
+                            <span class="leg-desc">1x Near-Expiry ATM Option</span>
+                        </div>
+                        <div class="leg buy-leg">
+                            <span class="leg-action">BUY</span>
+                            <span class="leg-desc">1x Next-Expiry ATM Option (same strike)</span>
+                        </div>
+                    </div>
+                    <div class="strategy-info">
+                        <div class="info-row">
+                            <span class="info-label">Max Profit</span>
+                            <span class="info-value profit">When near-expiry decays faster</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Max Loss</span>
+                            <span class="info-value loss">Net Debit Paid</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Edge</span>
+                            <span class="info-value">Theta differential between expiries</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Best When</span>
+                            <span class="info-value">Market stays near the strike price</span>
+                        </div>
+                    </div>
+                    <div class="strategy-pnl-chart" id="chart-calendar"></div>
+                    <div class="strategy-verdict">
+                        <p><strong>✅ Smart Theta Play:</strong> Sell this week's expiry (fast decay) and buy next week's (slow decay). Profit from the decay differential.</p>
+                        <p><strong>⚠️ Risk:</strong> Doesn't work well on volatile expiry days. Best for steady, predictable markets.</p>
+                        <p><strong>💡 Pro Tip:</strong> Perfect for weekly-to-weekly Nifty trades. Enter on Monday, close Thursday. Use ATM strikes for maximum theta differential.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- P&L Simulator -->
+<section class="section simulator-section" id="simulator">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">INTERACTIVE SIMULATOR</span>
+            <h2>Hero Strike P&L Calculator</h2>
+            <p class="section-desc">Choose your index, strategy, and see live P&L based on expiry scenarios</p>
+        </div>
+        
+        <div class="simulator-container">
+            <div class="simulator-controls">
+                <div class="control-group">
+                    <label>Index</label>
+                    <div class="radio-group">
+                        <label class="radio-option active">
+                            <input type="radio" name="index" value="nifty" checked>
+                            <span>NIFTY</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="index" value="banknifty">
+                            <span>BANKNIFTY</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="index" value="sensex">
+                            <span>SENSEX</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Current Price (Spot)</label>
+                    <input type="number" id="spot-price" value="24700" class="sim-input">
+                </div>
+
+                <div class="control-group">
+                    <label>Strategy</label>
+                    <select id="strategy-select" class="sim-select">
+                        <option value="straddle">Long Straddle</option>
+                        <option value="strangle">Long Strangle</option>
+                        <option value="bullcall">Bull Call Spread</option>
+                        <option value="bearput">Bear Put Spread</option>
+                        <option value="ironcondor">Iron Condor</option>
+                        <option value="ironbutterfly">Iron Butterfly</option>
+                        <option value="ratio">Ratio Back Spread (Call)</option>
+                        <option value="hedged" selected>Hedged Straddle ★</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Lot Size</label>
+                    <input type="number" id="lot-size" value="25" class="sim-input">
+                </div>
+
+                <div class="control-group">
+                    <label>Number of Lots</label>
+                    <input type="number" id="num-lots" value="1" class="sim-input">
+                </div>
+
+                <div class="control-group">
+                    <label>ATM Premium (CE)</label>
+                    <input type="number" id="ce-premium" value="200" class="sim-input">
+                </div>
+
+                <div class="control-group">
+                    <label>ATM Premium (PE)</label>
+                    <input type="number" id="pe-premium" value="200" class="sim-input">
+                </div>
+
+                <div class="control-group">
+                    <label>Spread Width (points)</label>
+                    <input type="number" id="spread-width" value="200" class="sim-input">
+                </div>
+
+                <button class="sim-calculate-btn" id="calculate-btn">
+                    <span>Calculate P&L</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+
+            <div class="simulator-results">
+                <div class="result-header">
+                    <h3>Expiry Day Scenarios</h3>
+                    <span class="result-strategy" id="result-strategy-name">Hedged Straddle</span>
+                </div>
+
+                <div class="scenario-grid" id="scenario-grid">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="pnl-chart-container">
+                    <h4>P&L Payoff Diagram</h4>
+                    <canvas id="pnl-canvas" width="600" height="300"></canvas>
+                </div>
+
+                <div class="key-metrics" id="key-metrics">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- The Playbook -->
+<section class="section playbook-section" id="playbook">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">THE PLAYBOOK</span>
+            <h2>How to Identify the Hero Strike</h2>
+            <p class="section-desc">A systematic checklist to maximize your probability of catching the hero</p>
+        </div>
+
+        <div class="playbook-grid">
+            <div class="playbook-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Check Open Interest (OI) Distribution</h3>
+                    <p>The strike with highest PUT OI acts as <strong>support</strong>. Highest CALL OI acts as <strong>resistance</strong>. Market tends to expire between these levels.</p>
+                    <div class="step-example">
+                        <span class="example-label">Example:</span> If 24,500 PE has highest OI and 25,000 CE has highest OI → Market likely to expire between 24,500-25,000
+                    </div>
+                </div>
+            </div>
+            <div class="playbook-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Track OI Change (Build-up vs Unwinding)</h3>
+                    <p><strong>Long Build-up</strong> (Price ↑ + OI ↑) = Bullish → Calls likely hero.<br>
+                    <strong>Short Build-up</strong> (Price ↓ + OI ↑) = Bearish → Puts likely hero.<br>
+                    <strong>Short Covering</strong> (Price ↑ + OI ↓) = Temporary rise → Wait.<br>
+                    <strong>Long Unwinding</strong> (Price ↓ + OI ↓) = Profit booking → Wait.</p>
+                </div>
+            </div>
+            <div class="playbook-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Max Pain Theory</h3>
+                    <p>The price at which maximum number of options expire worthless (maximum pain for buyers). Market makers have incentive to push market toward Max Pain. This strike is the <strong>anti-hero</strong> — avoid buying options near it.</p>
+                    <div class="step-example">
+                        <span class="example-label">Action:</span> If Max Pain = 24,600, avoid buying 24,600 CE or PE. Buy further away from Max Pain.
+                    </div>
+                </div>
+            </div>
+            <div class="playbook-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>PCR (Put-Call Ratio) Analysis</h3>
+                    <p><strong>PCR > 1.2</strong> = Too many puts sold → Bullish (support strong) → Calls may become hero.<br>
+                    <strong>PCR < 0.8</strong> = Too many calls sold → Bearish (resistance strong) → Puts may become hero.<br>
+                    <strong>PCR 0.8-1.2</strong> = Neutral → Iron Condor / Butterfly territory.</p>
+                </div>
+            </div>
+            <div class="playbook-step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>India VIX Check</h3>
+                    <p><strong>VIX > 18</strong> = High volatility expected → Straddle / Strangle (buyer's market)<br>
+                    <strong>VIX < 13</strong> = Low volatility → Iron Condor / Butterfly (seller's market)<br>
+                    <strong>VIX 13-18</strong> = Normal → Use spreads with defined risk</p>
+                </div>
+            </div>
+            <div class="playbook-step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h3>Time Your Entry</h3>
+                    <p><strong>9:15-9:45</strong> = Wait for direction clarity. Don't trade in first 15 min chaos.<br>
+                    <strong>9:45-11:00</strong> = Best window for directional trades after trend establishes.<br>
+                    <strong>11:00-1:00</strong> = Range-bound usually. Sell strategies work here.<br>
+                    <strong>1:00-3:30</strong> = Final move. If you missed the hero, don't chase. Theta is king.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Tree -->
+        <div class="decision-tree">
+            <h3 class="tree-title">🎯 Expiry Day Decision Framework</h3>
+            <div class="tree-container">
+                <div class="tree-node root-node">
+                    <span>Is there a clear trend?</span>
+                </div>
+                <div class="tree-branches">
+                    <div class="tree-branch yes-branch">
+                        <div class="tree-connector">YES ↓</div>
+                        <div class="tree-node">Bullish or Bearish?</div>
+                        <div class="tree-branches">
+                            <div class="tree-branch">
+                                <div class="tree-connector">BULLISH</div>
+                                <div class="tree-leaf hero-leaf">
+                                    <strong>Bull Call Spread</strong><br>or Ratio Call Backspread
+                                </div>
+                            </div>
+                            <div class="tree-branch">
+                                <div class="tree-connector">BEARISH</div>
+                                <div class="tree-leaf hero-leaf">
+                                    <strong>Bear Put Spread</strong><br>or Ratio Put Backspread
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tree-branch no-branch">
+                        <div class="tree-connector">NO ↓</div>
+                        <div class="tree-node">VIX High or Low?</div>
+                        <div class="tree-branches">
+                            <div class="tree-branch">
+                                <div class="tree-connector">HIGH VIX</div>
+                                <div class="tree-leaf hero-leaf">
+                                    <strong>Hedged Straddle</strong><br>or Long Strangle
+                                </div>
+                            </div>
+                            <div class="tree-branch">
+                                <div class="tree-connector">LOW VIX</div>
+                                <div class="tree-leaf hero-leaf">
+                                    <strong>Iron Condor</strong><br>or Iron Butterfly
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Index Specifics -->
+<section class="section index-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge">INDEX SPECIFICS</span>
+            <h2>Nifty vs BankNifty vs Sensex</h2>
+        </div>
+        <div class="index-comparison-grid">
+            <div class="index-card nifty-card-detail">
+                <div class="index-card-header">
+                    <h3>NIFTY 50</h3>
+                    <span class="index-expiry">Thu Weekly</span>
+                </div>
+                <div class="index-details">
+                    <div class="detail-row"><span>Lot Size</span><span>25</span></div>
+                    <div class="detail-row"><span>Strike Gap</span><span>50 points</span></div>
+                    <div class="detail-row"><span>Avg Expiry Range</span><span>100-200 pts</span></div>
+                    <div class="detail-row"><span>Best Strategy</span><span>Hedged Straddle</span></div>
+                    <div class="detail-row"><span>Lot Value (~)</span><span>₹6,17,500</span></div>
+                    <div class="detail-row"><span>Liquidity</span><span class="high-liq">★★★★★</span></div>
+                </div>
+                <div class="index-tip">💡 Most liquid. Tight spreads. Best for beginners. Moves are measured, rarely extreme on expiry.</div>
+            </div>
+            <div class="index-card banknifty-card-detail">
+                <div class="index-card-header">
+                    <h3>BANKNIFTY</h3>
+                    <span class="index-expiry">Wed Weekly</span>
+                </div>
+                <div class="index-details">
+                    <div class="detail-row"><span>Lot Size</span><span>15</span></div>
+                    <div class="detail-row"><span>Strike Gap</span><span>100 points</span></div>
+                    <div class="detail-row"><span>Avg Expiry Range</span><span>300-600 pts</span></div>
+                    <div class="detail-row"><span>Best Strategy</span><span>Ratio Backspread</span></div>
+                    <div class="detail-row"><span>Lot Value (~)</span><span>₹7,80,000</span></div>
+                    <div class="detail-row"><span>Liquidity</span><span class="high-liq">★★★★☆</span></div>
+                </div>
+                <div class="index-tip">⚡ Highly volatile! Can move 500-1000 pts on expiry. Hero strikes can give 50x-100x returns. High risk, high reward.</div>
+            </div>
+            <div class="index-card sensex-card-detail">
+                <div class="index-card-header">
+                    <h3>SENSEX</h3>
+                    <span class="index-expiry">Fri Weekly</span>
+                </div>
+                <div class="index-details">
+                    <div class="detail-row"><span>Lot Size</span><span>10</span></div>
+                    <div class="detail-row"><span>Strike Gap</span><span>100 points</span></div>
+                    <div class="detail-row"><span>Avg Expiry Range</span><span>200-400 pts</span></div>
+                    <div class="detail-row"><span>Best Strategy</span><span>Iron Condor</span></div>
+                    <div class="detail-row"><span>Lot Value (~)</span><span>₹8,10,000</span></div>
+                    <div class="detail-row"><span>Liquidity</span><span class="med-liq">★★★☆☆</span></div>
+                </div>
+                <div class="index-tip">📊 Lower liquidity but wider spreads. Good for position traders. Less "expiry game" manipulation compared to Nifty.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Risk Management -->
+<section class="section risk-section">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-badge warning-badge">⚠️ CRITICAL</span>
+            <h2>Risk Management Rules</h2>
+        </div>
+        <div class="risk-rules-grid">
+            <div class="risk-rule">
+                <div class="rule-icon">💰</div>
+                <h4>2% Rule</h4>
+                <p>Never risk more than 2% of your total capital on a single expiry trade. If capital = ₹5L, max risk = ₹10,000.</p>
+            </div>
+            <div class="risk-rule">
+                <div class="rule-icon">🎯</div>
+                <h4>Define Before You Enter</h4>
+                <p>Know your max loss, max profit, and exit conditions BEFORE placing the trade. Write it down.</p>
+            </div>
+            <div class="risk-rule">
+                <div class="rule-icon">⏱️</div>
+                <h4>Time-Based Exit</h4>
+                <p>If your setup doesn't play out by 1:00 PM on expiry, close the position. Don't hold till 3:30 hoping for miracles.</p>
+            </div>
+            <div class="risk-rule">
+                <div class="rule-icon">📊</div>
+                <h4>Always Hedge</h4>
+                <p>NEVER take naked positions on expiry. Always use spreads or multi-leg strategies. The "hero" can quickly become the villain.</p>
+            </div>
+            <div class="risk-rule">
+                <div class="rule-icon">🧮</div>
+                <h4>Track Every Trade</h4>
+                <p>Maintain a trading journal. Record strategy, entry, exit, P&L, and lessons. Review weekly. Data beats emotion.</p>
+            </div>
+            <div class="risk-rule">
+                <div class="rule-icon">🚫</div>
+                <h4>No Revenge Trading</h4>
+                <p>Lost money on one expiry? Don't try to "win it back" on the next trade. Cool off period: minimum 1 day.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Disclaimer -->
+<footer class="footer">
+    <div class="container">
+        <div class="disclaimer">
+            <h4>⚠️ Disclaimer</h4>
+            <p>This tool is for <strong>educational purposes only</strong>. Options trading involves substantial risk of loss and is not suitable for all investors. Past performance does not guarantee future results. The strategies presented are theoretical illustrations and do not constitute financial advice. Always consult a SEBI-registered financial advisor before trading. Trading in derivatives requires proper understanding of risks involved.</p>
+        </div>
+        <div class="footer-brand">
+            <span class="brand-icon">◆</span> Hero Strike Analyzer
+            <span class="footer-year">2025</span>
+        </div>
+    </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

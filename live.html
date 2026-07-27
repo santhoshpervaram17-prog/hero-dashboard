@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hero Strike LIVE | Real-Time Options Dashboard</title>
+    <meta name="description" content="Live options trading dashboard with real-time option chain, Greeks, P&L tracking for Nifty, Sensex, and BankNifty">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="live-style.css">
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="top-bar">
+    <div class="top-left">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">Hero Strike</span>
+        <span class="logo-badge">LIVE</span>
+        <div class="connection-status" id="connection-status">
+            <span class="status-dot simulated"></span>
+            <span class="status-text">Simulated Feed</span>
+        </div>
+    </div>
+    <div class="top-center">
+        <div class="index-tabs">
+            <button class="index-tab active" data-index="nifty">
+                <span class="tab-name">NIFTY 50</span>
+                <span class="tab-price" id="nifty-price">24,712.50</span>
+                <span class="tab-change positive" id="nifty-change">+87.30 (+0.35%)</span>
+            </button>
+            <button class="index-tab" data-index="banknifty">
+                <span class="tab-name">BANKNIFTY</span>
+                <span class="tab-price" id="banknifty-price">52,340.15</span>
+                <span class="tab-change positive" id="banknifty-change">+215.60 (+0.41%)</span>
+            </button>
+            <button class="index-tab" data-index="sensex">
+                <span class="tab-name">SENSEX</span>
+                <span class="tab-price" id="sensex-price">81,245.80</span>
+                <span class="tab-change negative" id="sensex-change">-120.40 (-0.15%)</span>
+            </button>
+        </div>
+    </div>
+    <div class="top-right">
+        <div class="market-meta">
+            <div class="meta-item">
+                <span class="meta-label">VIX</span>
+                <span class="meta-value" id="vix-value">14.25</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">PCR</span>
+                <span class="meta-value" id="pcr-value">1.12</span>
+            </div>
+        </div>
+        <div class="clock" id="market-clock">15:24:30</div>
+        <button class="connect-btn" id="connect-btn" title="Connect broker API">
+            <span class="connect-icon">⚡</span> Connect API
+        </button>
+        <a href="index.html" class="back-link">← Strategies</a>
+    </div>
+</header>
+
+<!-- Main Dashboard Grid -->
+<main class="dashboard">
+
+    <!-- Left Panel: Live Chart -->
+    <section class="panel chart-panel">
+        <div class="panel-header">
+            <h2>
+                <span id="chart-index-name">NIFTY 50</span>
+                <span class="live-dot"></span>
+            </h2>
+            <div class="chart-controls">
+                <button class="chart-tf active" data-tf="1m">1m</button>
+                <button class="chart-tf" data-tf="5m">5m</button>
+                <button class="chart-tf" data-tf="15m">15m</button>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="live-chart"></canvas>
+            <div class="chart-overlay">
+                <div class="chart-crosshair-info" id="crosshair-info" style="display:none;">
+                    <span class="ch-price"></span>
+                    <span class="ch-time"></span>
+                </div>
+            </div>
+        </div>
+        <div class="chart-footer">
+            <div class="chart-stat">
+                <span class="cs-label">Open</span>
+                <span class="cs-value" id="stat-open">24,625.20</span>
+            </div>
+            <div class="chart-stat">
+                <span class="cs-label">High</span>
+                <span class="cs-value positive" id="stat-high">24,748.90</span>
+            </div>
+            <div class="chart-stat">
+                <span class="cs-label">Low</span>
+                <span class="cs-value negative" id="stat-low">24,592.10</span>
+            </div>
+            <div class="chart-stat">
+                <span class="cs-label">LTP</span>
+                <span class="cs-value" id="stat-ltp">24,712.50</span>
+            </div>
+            <div class="chart-stat">
+                <span class="cs-label">Day Range</span>
+                <span class="cs-value" id="stat-range">156.80</span>
+            </div>
+            <div class="chart-stat">
+                <span class="cs-label">Max Pain</span>
+                <span class="cs-value blue" id="stat-maxpain">24,700</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Right Panel: Option Chain -->
+    <section class="panel chain-panel">
+        <div class="panel-header">
+            <h2>Option Chain <span class="live-dot"></span></h2>
+            <div class="chain-controls">
+                <select id="expiry-select" class="chain-select">
+                    <option value="weekly">Current Expiry (Weekly)</option>
+                    <option value="nextweek">Next Expiry (Weekly)</option>
+                    <option value="monthly">Monthly Expiry</option>
+                </select>
+                <button class="chain-view-btn active" data-view="full">Full</button>
+                <button class="chain-view-btn" data-view="oi">OI</button>
+            </div>
+        </div>
+        <div class="chain-table-wrapper">
+            <table class="chain-table" id="option-chain-table">
+                <thead>
+                    <tr>
+                        <th colspan="6" class="ce-header">CALLS (CE)</th>
+                        <th class="strike-header">STRIKE</th>
+                        <th colspan="6" class="pe-header">PUTS (PE)</th>
+                    </tr>
+                    <tr class="sub-header">
+                        <th>OI</th>
+                        <th>Chg OI</th>
+                        <th>Vol</th>
+                        <th>IV</th>
+                        <th>LTP</th>
+                        <th>Chg</th>
+                        <th class="strike-col"></th>
+                        <th>Chg</th>
+                        <th>LTP</th>
+                        <th>IV</th>
+                        <th>Vol</th>
+                        <th>Chg OI</th>
+                        <th>OI</th>
+                    </tr>
+                </thead>
+                <tbody id="chain-body">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+        <div class="chain-summary">
+            <div class="summary-item">
+                <span class="sum-label">Total CE OI</span>
+                <span class="sum-value" id="total-ce-oi">12,45,300</span>
+            </div>
+            <div class="summary-item">
+                <span class="sum-label">Total PE OI</span>
+                <span class="sum-value" id="total-pe-oi">13,92,100</span>
+            </div>
+            <div class="summary-item">
+                <span class="sum-label">PCR (OI)</span>
+                <span class="sum-value highlight" id="pcr-oi">1.12</span>
+            </div>
+            <div class="summary-item">
+                <span class="sum-label">Max Pain</span>
+                <span class="sum-value highlight" id="max-pain-val">24,700</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Left: Strategy Monitor -->
+    <section class="panel strategy-panel">
+        <div class="panel-header">
+            <h2>Strategy Monitor</h2>
+            <button class="add-strategy-btn" id="add-strategy-btn">+ Add Strategy</button>
+        </div>
+
+        <!-- Add Strategy Modal (inline) -->
+        <div class="strategy-builder" id="strategy-builder" style="display:none;">
+            <div class="builder-row">
+                <select id="build-strategy-type" class="chain-select">
+                    <option value="straddle">Long Straddle</option>
+                    <option value="strangle">Long Strangle</option>
+                    <option value="bullcall">Bull Call Spread</option>
+                    <option value="bearput">Bear Put Spread</option>
+                    <option value="ironcondor">Iron Condor</option>
+                    <option value="hedged">Hedged Straddle ★</option>
+                </select>
+                <select id="build-strike" class="chain-select">
+                    <!-- Populated dynamically -->
+                </select>
+                <input type="number" id="build-lots" value="1" min="1" max="50" class="builder-input" placeholder="Lots">
+                <button class="builder-add-btn" id="builder-add-btn">Deploy</button>
+                <button class="builder-cancel-btn" id="builder-cancel-btn">✕</button>
+            </div>
+        </div>
+
+        <div class="active-strategies" id="active-strategies">
+            <!-- Pre-populated demo strategy -->
+        </div>
+
+        <div class="no-strategies" id="no-strategies">
+            <div class="empty-icon">📋</div>
+            <p>No active strategies. Click <strong>+ Add Strategy</strong> to start tracking.</p>
+        </div>
+    </section>
+
+    <!-- Bottom Right: Greeks & Analysis -->
+    <section class="panel greeks-panel">
+        <div class="panel-header">
+            <h2>Live Greeks & Analysis</h2>
+            <div class="greek-tabs">
+                <button class="greek-tab active" data-tab="greeks">Greeks</button>
+                <button class="greek-tab" data-tab="oi-analysis">OI Analysis</button>
+                <button class="greek-tab" data-tab="hero-signals">Hero Signals</button>
+            </div>
+        </div>
+
+        <!-- Greeks Tab -->
+        <div class="greek-content active" id="tab-greeks">
+            <div class="greek-selector">
+                <span class="greek-sel-label">Strike:</span>
+                <select id="greek-strike-select" class="chain-select small-select">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+            <div class="greeks-grid">
+                <div class="greek-card">
+                    <div class="greek-name">Delta (Δ)</div>
+                    <div class="greek-gauge">
+                        <div class="gauge-bar" id="delta-bar" style="--val:52%"></div>
+                    </div>
+                    <div class="greek-values">
+                        <span class="gv-ce" id="delta-ce">CE: 0.52</span>
+                        <span class="gv-pe" id="delta-pe">PE: -0.48</span>
+                    </div>
+                    <div class="greek-desc">Price sensitivity. How much option price changes per ₹1 move in spot.</div>
+                </div>
+                <div class="greek-card">
+                    <div class="greek-name">Gamma (Γ)</div>
+                    <div class="greek-gauge">
+                        <div class="gauge-bar gamma-bar" id="gamma-bar" style="--val:80%"></div>
+                    </div>
+                    <div class="greek-values">
+                        <span class="gv-ce" id="gamma-ce">CE: 0.0045</span>
+                        <span class="gv-pe" id="gamma-pe">PE: 0.0045</span>
+                    </div>
+                    <div class="greek-desc">Rate of change of Delta. Highest at ATM on expiry day!</div>
+                </div>
+                <div class="greek-card">
+                    <div class="greek-name">Theta (Θ)</div>
+                    <div class="greek-gauge">
+                        <div class="gauge-bar theta-bar" id="theta-bar" style="--val:90%"></div>
+                    </div>
+                    <div class="greek-values">
+                        <span class="gv-ce" id="theta-ce">CE: -15.20</span>
+                        <span class="gv-pe" id="theta-pe">PE: -14.80</span>
+                    </div>
+                    <div class="greek-desc">Time decay per day. ⚠️ On expiry, this accelerates massively!</div>
+                </div>
+                <div class="greek-card">
+                    <div class="greek-name">Vega (ν)</div>
+                    <div class="greek-gauge">
+                        <div class="gauge-bar vega-bar" id="vega-bar" style="--val:35%"></div>
+                    </div>
+                    <div class="greek-values">
+                        <span class="gv-ce" id="vega-ce">CE: 3.20</span>
+                        <span class="gv-pe" id="vega-pe">PE: 3.20</span>
+                    </div>
+                    <div class="greek-desc">Sensitivity to volatility change. Low on expiry day.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OI Analysis Tab -->
+        <div class="greek-content" id="tab-oi-analysis">
+            <div class="oi-chart-container">
+                <canvas id="oi-chart" height="220"></canvas>
+            </div>
+            <div class="oi-insights">
+                <div class="oi-insight">
+                    <span class="insight-icon">🟢</span>
+                    <span class="insight-text" id="oi-insight-1">Highest CE OI at <strong>25,000</strong> — Strong resistance</span>
+                </div>
+                <div class="oi-insight">
+                    <span class="insight-icon">🔴</span>
+                    <span class="insight-text" id="oi-insight-2">Highest PE OI at <strong>24,500</strong> — Strong support</span>
+                </div>
+                <div class="oi-insight">
+                    <span class="insight-icon">📊</span>
+                    <span class="insight-text" id="oi-insight-3">Expected range: <strong>24,500 – 25,000</strong></span>
+                </div>
+                <div class="oi-insight">
+                    <span class="insight-icon">🎯</span>
+                    <span class="insight-text" id="oi-insight-4">Max Pain: <strong>24,700</strong> — Market gravitating here</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Signals Tab -->
+        <div class="greek-content" id="tab-hero-signals">
+            <div class="hero-signal-card">
+                <div class="signal-header">
+                    <span class="signal-title">🎯 Hero Strike Prediction</span>
+                    <span class="signal-confidence" id="hero-confidence">72% Confidence</span>
+                </div>
+                <div class="signal-body">
+                    <div class="signal-prediction" id="hero-prediction">
+                        <div class="prediction-side" id="pred-side">CALLS (CE)</div>
+                        <div class="prediction-reason" id="pred-reason">Based on: OI buildup, PCR trend, VIX level</div>
+                    </div>
+                </div>
+            </div>
+            <div class="signal-factors">
+                <div class="factor-row">
+                    <span class="factor-name">OI Trend</span>
+                    <div class="factor-meter">
+                        <div class="meter-fill bullish" id="factor-oi" style="width: 65%"></div>
+                    </div>
+                    <span class="factor-label bullish-label" id="factor-oi-label">Bullish</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">PCR Ratio</span>
+                    <div class="factor-meter">
+                        <div class="meter-fill bullish" id="factor-pcr" style="width: 58%"></div>
+                    </div>
+                    <span class="factor-label bullish-label" id="factor-pcr-label">Mildly Bullish</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">VIX Level</span>
+                    <div class="factor-meter">
+                        <div class="meter-fill neutral" id="factor-vix" style="width: 50%"></div>
+                    </div>
+                    <span class="factor-label" id="factor-vix-label">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">Price Action</span>
+                    <div class="factor-meter">
+                        <div class="meter-fill bullish" id="factor-price" style="width: 70%"></div>
+                    </div>
+                    <span class="factor-label bullish-label" id="factor-price-label">Bullish</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">OI Unwinding</span>
+                    <div class="factor-meter">
+                        <div class="meter-fill bearish" id="factor-unwind" style="width: 40%"></div>
+                    </div>
+                    <span class="factor-label bearish-label" id="factor-unwind-label">Mild Selling</span>
+                </div>
+            </div>
+            <div class="signal-actions">
+                <div class="recommended-strategy" id="recommended-strategy">
+                    <span class="rec-label">Recommended Strategy:</span>
+                    <span class="rec-value">Bull Call Spread (24700 / 24900)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Broker Connection Modal -->
+<div class="modal-overlay" id="broker-modal" style="display:none;">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>⚡ Connect Fyers API</h3>
+            <button class="modal-close" id="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-desc">Connect your <strong>Fyers API</strong> for real-time live data. Follow the steps below:</p>
+
+            <!-- Server Status Check -->
+            <div class="server-status-card" id="server-status-card">
+                <div class="server-check">
+                    <span class="server-icon" id="server-icon">⏳</span>
+                    <div>
+                        <div class="server-label" id="server-label">Checking server...</div>
+                        <div class="server-detail" id="server-detail">Looking for server...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step by Step Guide -->
+            <div class="setup-steps">
+                <div class="setup-step">
+                    <span class="step-num">1</span>
+                    <div class="step-body">
+                        <h4>Set Redirect URL in Fyers Dashboard</h4>
+                        <p>Go to <strong>myapi.fyers.in</strong> → Your App → Set Redirect URL to:</p>
+                        <div class="copy-box" id="redirect-url-box">
+                            <code id="redirect-url-display">http://127.0.0.1:8080/callback</code>
+                            <button class="copy-btn" onclick="copyRedirectUrl()">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-step">
+                    <span class="step-num">2</span>
+                    <div class="step-body">
+                        <h4>Add Your Credentials to the Server</h4>
+                        <p>Open <code>fyers-server.js</code> and fill in:</p>
+                        <div class="code-block">
+                            <pre>APP_ID: '<span style="color:#00e676">YOUR_APP_ID</span>',       // e.g., 'XXXXXXXXXX-100'
+SECRET_KEY: '<span style="color:#00e676">YOUR_SECRET</span>',  // From Fyers dashboard</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-step">
+                    <span class="step-num">3</span>
+                    <div class="step-body">
+                        <h4>Start the Server</h4>
+                        <p>Open terminal in the project folder and run:</p>
+                        <div class="copy-box">
+                            <code>node fyers-server.js</code>
+                            <button class="copy-btn" onclick="navigator.clipboard.writeText('node fyers-server.js')">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="setup-step">
+                    <span class="step-num">4</span>
+                    <div class="step-body">
+                        <h4>Login with Fyers</h4>
+                        <p>Click the button below to authenticate with your Fyers account:</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-note">
+                <strong>🔒 Security:</strong> Your credentials stay secure in <code>fyers-server.js</code> or environment variables. No data is shared with third parties except Fyers' official API.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn secondary" id="modal-cancel">Cancel</button>
+            <button class="modal-btn primary" id="fyers-login-btn" disabled>🔑 Login with Fyers</button>
+        </div>
+    </div>
+</div>
+
+<!-- Re-Login Required Overlay (hidden by default) -->
+<div class="relogin-overlay" id="relogin-overlay" style="display:none;">
+    <div class="relogin-card">
+        <div class="relogin-icon">🔑</div>
+        <h2>Fyers Token Expired</h2>
+        <p>Your Fyers API session has expired. Tokens are valid for one trading session only.</p>
+        <p class="relogin-sub">Click below to re-authenticate with Fyers and get fresh market data.</p>
+        <button class="relogin-btn" onclick="fyersLogin();">
+            🔑 Re-Login with Fyers
+        </button>
+        <p class="relogin-hint">Or open <code>live.html</code> directly (without ?connected=true)</p>
+    </div>
+</div>
+
+<style>
+.relogin-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 11, 15, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+.relogin-card {
+    text-align: center;
+    max-width: 440px;
+    padding: 48px 40px;
+    background: linear-gradient(145deg, rgba(30,30,45,0.9), rgba(15,15,25,0.95));
+    border: 1px solid rgba(255,82,82,0.3);
+    border-radius: 20px;
+    box-shadow: 0 0 60px rgba(255,82,82,0.1);
+}
+.relogin-icon { font-size: 56px; margin-bottom: 16px; }
+.relogin-card h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #ff5252;
+    margin-bottom: 12px;
+}
+.relogin-card p {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+.relogin-sub { margin-bottom: 28px !important; }
+.relogin-btn {
+    display: inline-block;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #448aff, #2962ff);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+}
+.relogin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(68,138,255,0.4);
+}
+.relogin-hint {
+    font-size: 11px !important;
+    color: rgba(255,255,255,0.3) !important;
+}
+.relogin-hint code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+</style>
+
+<!-- Toast Notifications -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="live-app.js"></script>
+</body>
+</html>

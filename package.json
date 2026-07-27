@@ -1,0 +1,24 @@
+{
+  "name": "options-hero-strike",
+  "version": "1.0.0",
+  "description": "High-performance Fyers live options trading dashboard and Hero-Zero strike predictor",
+  "main": "fyers-server.js",
+  "scripts": {
+    "start": "node fyers-server.js",
+    "dev": "node fyers-server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "fyers",
+    "options",
+    "trading",
+    "dashboard",
+    "nifty",
+    "banknifty",
+    "sensex"
+  ],
+  "author": "",
+  "license": "ISC"
+}
