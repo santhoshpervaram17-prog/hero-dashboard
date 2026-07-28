@@ -1453,8 +1453,8 @@ async function fetchLiveOptionChain(indexName, timestamp = '') {
                     const peLtp = peItem.ltp !== undefined ? peItem.ltp : (peItem.last_price || peItem.lp || peItem.close_price);
                     const ceOi = ceItem.oi !== undefined ? ceItem.oi : (ceItem.open_interest || ceItem.openInterest);
                     const peOi = peItem.oi !== undefined ? peItem.oi : (peItem.open_interest || peItem.openInterest);
-                    const ceChg = ceItem.change !== undefined ? ceItem.change : (ceItem.ch || ceItem.net_change || 0);
-                    const peChg = peItem.change !== undefined ? peItem.change : (peItem.ch || peItem.net_change || 0);
+                    const ceChg = ceItem.ltpch !== undefined ? ceItem.ltpch : (ceItem.change !== undefined ? ceItem.change : (ceItem.ch || ceItem.net_change || 0));
+                    const peChg = peItem.ltpch !== undefined ? peItem.ltpch : (peItem.change !== undefined ? peItem.change : (peItem.ch || peItem.net_change || 0));
                     const ceVol = ceItem.volume !== undefined ? ceItem.volume : (ceItem.vol || ceItem.v || defaultRow.ce.vol);
                     const peVol = peItem.volume !== undefined ? peItem.volume : (peItem.vol || peItem.v || defaultRow.pe.vol);
                     
@@ -1465,7 +1465,7 @@ async function fetchLiveOptionChain(indexName, timestamp = '') {
                             ltp: ceLtp !== undefined ? parseFloat(ceLtp) : defaultRow.ce.ltp,
                             change: parseFloat(ceChg),
                             oi: ceOi !== undefined ? parseInt(ceOi, 10) : defaultRow.ce.oi,
-                            oiChange: ceItem.oiChange || ceItem.oi_change || 0,
+                            oiChange: ceItem.oich !== undefined ? ceItem.oich : (ceItem.oiChange || ceItem.oi_change || 0),
                             vol: parseInt(ceVol, 10),
                             iv: defaultRow.ce.iv
                         },
@@ -1473,7 +1473,7 @@ async function fetchLiveOptionChain(indexName, timestamp = '') {
                             ltp: peLtp !== undefined ? parseFloat(peLtp) : defaultRow.pe.ltp,
                             change: parseFloat(peChg),
                             oi: peOi !== undefined ? parseInt(peOi, 10) : defaultRow.pe.oi,
-                            oiChange: peItem.oiChange || peItem.oi_change || 0,
+                            oiChange: peItem.oich !== undefined ? peItem.oich : (peItem.oiChange || peItem.oi_change || 0),
                             vol: parseInt(peVol, 10),
                             iv: defaultRow.pe.iv
                         }
