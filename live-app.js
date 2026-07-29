@@ -662,6 +662,20 @@ function updateOptionChain() {
     const pcrTopEl = document.getElementById('pcr-value');
     if (pcrTopEl) pcrTopEl.textContent = pcr.toFixed(2);
     document.getElementById('max-pain-val').textContent = formatNum(atmStrike);
+    
+    const trendEl = document.getElementById('oi-trend-val');
+    if (trendEl) {
+        if (totalPeOI > totalCeOI) {
+            trendEl.textContent = 'Bullish (PE > CE)';
+            trendEl.style.color = 'var(--green)';
+        } else if (totalCeOI > totalPeOI) {
+            trendEl.textContent = 'Bearish (CE > PE)';
+            trendEl.style.color = 'var(--red)';
+        } else {
+            trendEl.textContent = 'Neutral';
+            trendEl.style.color = 'var(--text-primary)';
+        }
+    }
 }
 
 function populateStrikeSelectors() {

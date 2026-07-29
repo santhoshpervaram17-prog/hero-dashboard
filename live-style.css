@@ -483,7 +483,7 @@ body {
 }
 
 .chain-table-wrapper {
-    flex: 1;
+    flex: 0 1 auto;
     overflow-y: auto;
     overflow-x: auto;
     min-height: 0;
@@ -608,6 +608,7 @@ body {
     border-top: 1px solid var(--border);
     background: var(--bg-panel-header);
     flex-shrink: 0;
+    margin-bottom: auto;
 }
 
 .summary-item {
