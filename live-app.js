@@ -302,20 +302,14 @@ function initIndexTabs() {
             tab.classList.add('active');
             activeIndex = tab.dataset.index;
             
-            document.getElementById('chart-index-name').textContent = MARKET[activeIndex].name;
-            
-            // In Fyers mode, switch chartData to the newly selected index's spot price
+            // In Fyers mode, switch to the newly selected index's spot price
             if (typeof isFyersDataLoaded !== 'undefined' && isFyersDataLoaded) {
-                fetchLiveChartHistory(activeIndex, activeTimeframe).then(() => {
-                    drawChart();
-                });
                 fetchLiveOptionChain(activeIndex, '').then(() => {
                     populateStrikeSelectors();
                     updateUI();
                 });
             } else {
                 initMarketData(activeTimeframe);
-                drawChart();
             }
             
             // Immediately update UI and selectors for the new index (prevents frozen Greeks/OI/Hero signals)
