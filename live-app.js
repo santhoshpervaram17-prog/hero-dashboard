@@ -637,7 +637,7 @@ function updateOptionChain() {
         const ceOIHigh = row.ce.oi === maxCeOI;
         const peOIHigh = row.pe.oi === maxPeOI;
         
-        return `<tr class="${isATM ? 'atm-row' : ''}">
+        return `<tr class="${isATM ? 'atm-row hero-strike-row' : ''}">
             <td class="${ceOIHigh ? 'oi-high-ce' : ''}">${formatCompact(row.ce.oi)}</td>
             <td class="${row.ce.oiChange >= 0 ? 'positive' : 'negative'}">${row.ce.oiChange >= 0 ? '+' : ''}${formatCompact(row.ce.oiChange)}</td>
             <td class="dim">${formatCompact(row.ce.vol)}</td>
@@ -1032,11 +1032,19 @@ function updateHeroSignals() {
     const vwap = (high + low + idx.spot) / 3;
     const aboveVWAP = idx.spot > vwap;
     
-    let bullishScore = 50;
+    let isOIBullish = false;
+    if (typeof chainDataCache !== 'undefined' && chainDataCache && chainDataCache.length > 0) {
+        const currentCeOI = chainDataCache.reduce((sum, r) => sum + (r.ce.oi || 0), 0);
+        const currentPeOI = chainDataCache.reduce((sum, r) => sum + (r.pe.oi || 0), 0);
+        isOIBullish = currentPeOI > currentCeOI;
+    }
+
+    let bullishScore = 40;
+    if (isOIBullish) bullishScore += 15;
     if (priceUp) bullishScore += 10;
     if (pcrBullish) bullishScore += 10;
     if (vix < 14) bullishScore += 5;
-    if (aboveVWAP) bullishScore += 15;
+    if (aboveVWAP) bullishScore += 10;
     
     // Only add random jitter during live simulation in market hours
     if (!isConnectedToFyers && isMarketOpen()) {
@@ -1081,7 +1089,7 @@ function updateHeroSignals() {
         }
     };
     
-    updateFactor('oi', isBullish, 'Bullish', 'Bearish');
+    updateFactor('oi', isOIBullish, 'Bullish', 'Bearish');
     updateFactor('pcr', pcrBullish, 'Mildly Bullish', 'Mildly Bearish');
     updateFactor('price', priceUp, 'Bullish', 'Bearish');
     updateFactor('vwap', aboveVWAP, 'Above VWAP (Bullish)', 'Below VWAP (Bearish)');
@@ -1106,6 +1114,37 @@ function updateHeroSignals() {
         unwindEl.className = `factor-bar ${isUnwindingBullish ? 'bullish' : 'bearish'}`;
         unwindLbl.textContent = isUnwindingBullish ? 'Call Unwinding' : 'Put Selling / Unwinding';
         unwindLbl.className = `factor-status ${isUnwindingBullish ? 'bullish-label' : 'bearish-label'}`;
+    }
+
+    const divergeEl = document.getElementById('fb-diverge');
+    const divergeLbl = document.getElementById('fs-diverge');
+    if (divergeEl && divergeLbl && typeof chainDataCache !== 'undefined' && chainDataCache && chainDataCache.length > 0) {
+        const totalCeVol = chainDataCache.reduce((sum, r) => sum + (r.ce.vol || 0), 0);
+        const totalPeVol = chainDataCache.reduce((sum, r) => sum + (r.pe.vol || 0), 0);
+        const totalCeChg = chainDataCache.reduce((sum, r) => sum + (r.ce.oiChange || 0), 0);
+        const totalPeChg = chainDataCache.reduce((sum, r) => sum + (r.pe.oiChange || 0), 0);
+        
+        let divergeStatus = 'Neutral';
+        let divergeScore = 50;
+        
+        if (totalCeVol > (totalPeVol * 1.2) && totalCeChg < 0) {
+            divergeStatus = 'Call Short Covering Panic';
+            divergeScore = 80;
+        } else if (totalPeVol > (totalCeVol * 1.2) && totalPeChg < 0) {
+            divergeStatus = 'Put Short Covering Panic';
+            divergeScore = 20;
+        } else if (totalCeVol > totalPeVol) {
+            divergeStatus = 'High Call Activity';
+            divergeScore = 60;
+        } else if (totalPeVol > totalCeVol) {
+            divergeStatus = 'High Put Activity';
+            divergeScore = 40;
+        }
+        
+        divergeEl.style.width = `${divergeScore}%`;
+        divergeEl.className = `factor-bar ${divergeScore > 60 ? 'bullish' : (divergeScore < 40 ? 'bearish' : '')}`;
+        divergeLbl.textContent = divergeStatus;
+        divergeLbl.className = `factor-status ${divergeScore > 60 ? 'bullish-label' : (divergeScore < 40 ? 'bearish-label' : '')}`;
     }
 
     // Recommended strategy

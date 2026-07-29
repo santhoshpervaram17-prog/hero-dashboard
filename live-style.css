@@ -565,6 +565,12 @@ body {
     border-bottom: 1px solid rgba(68, 138, 255, 0.15);
 }
 
+.chain-table tbody tr.hero-strike-row {
+    background: rgba(0, 230, 118, 0.1) !important;
+    border: 2px solid var(--green);
+    box-shadow: 0 0 12px rgba(0, 230, 118, 0.2) inset;
+}
+
 .chain-table td {
     padding: 5px 6px;
     text-align: right;
