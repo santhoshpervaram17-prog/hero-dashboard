@@ -606,6 +606,8 @@ body {
 
 .chain-table td.oi-high-ce { background: rgba(0, 230, 118, 0.06); }
 .chain-table td.oi-high-pe { background: rgba(255, 82, 82, 0.06); }
+.chain-table td.vol-explosion { background: rgba(255, 171, 0, 0.15) !important; color: #ffab00; font-weight: 700; border: 1px solid rgba(255,171,0,0.5); }
+.wall-icon { font-size: 11px; margin-left: 4px; vertical-align: middle; }
 
 .chain-summary {
     display: flex;

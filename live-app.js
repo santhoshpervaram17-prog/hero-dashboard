@@ -626,6 +626,8 @@ function updateOptionChain() {
     // Find max OI for highlighting
     const maxCeOI = Math.max(...chainDataCache.map(r => r.ce.oi));
     const maxPeOI = Math.max(...chainDataCache.map(r => r.pe.oi));
+    const maxCeOiAdd = Math.max(1, ...chainDataCache.map(r => r.ce.oiChange));
+    const maxPeOiAdd = Math.max(1, ...chainDataCache.map(r => r.pe.oiChange));
     
     let totalCeOI = 0, totalPeOI = 0;
     
@@ -636,11 +638,15 @@ function updateOptionChain() {
         const isATM = row.strike === atmStrike;
         const ceOIHigh = row.ce.oi === maxCeOI;
         const peOIHigh = row.pe.oi === maxPeOI;
+        const ceWall = row.ce.oiChange === maxCeOiAdd;
+        const peWall = row.pe.oiChange === maxPeOiAdd;
+        const ceVolExp = row.ce.vol > (row.ce.oi * 3) && row.ce.vol > 10000;
+        const peVolExp = row.pe.vol > (row.pe.oi * 3) && row.pe.vol > 10000;
         
         return `<tr class="${isATM ? 'atm-row hero-strike-row' : ''}">
             <td class="${ceOIHigh ? 'oi-high-ce' : ''}">${formatCompact(row.ce.oi)}</td>
-            <td class="${row.ce.oiChange >= 0 ? 'positive' : 'negative'}">${row.ce.oiChange >= 0 ? '+' : ''}${formatCompact(row.ce.oiChange)}</td>
-            <td class="dim">${formatCompact(row.ce.vol)}</td>
+            <td class="${row.ce.oiChange >= 0 ? 'positive' : 'negative'}">${row.ce.oiChange >= 0 ? '+' : ''}${formatCompact(row.ce.oiChange)}${ceWall ? '<span class="wall-icon" title="Institutional Resistance Wall">🛡️</span>' : ''}</td>
+            <td class="dim ${ceVolExp ? 'vol-explosion' : ''}">${formatCompact(row.ce.vol)}</td>
             <td class="dim">${row.ce.iv}%</td>
             <td class="ce-ltp">${row.ce.ltp.toFixed(2)}</td>
             <td class="${row.ce.change >= 0 ? 'positive' : 'negative'}">${row.ce.change >= 0 ? '+' : ''}${row.ce.change.toFixed(2)}</td>
@@ -648,8 +654,8 @@ function updateOptionChain() {
             <td class="${row.pe.change >= 0 ? 'positive' : 'negative'}">${row.pe.change >= 0 ? '+' : ''}${row.pe.change.toFixed(2)}</td>
             <td class="pe-ltp">${row.pe.ltp.toFixed(2)}</td>
             <td class="dim">${row.pe.iv}%</td>
-            <td class="dim">${formatCompact(row.pe.vol)}</td>
-            <td class="${row.pe.oiChange >= 0 ? 'positive' : 'negative'}">${row.pe.oiChange >= 0 ? '+' : ''}${formatCompact(row.pe.oiChange)}</td>
+            <td class="dim ${peVolExp ? 'vol-explosion' : ''}">${formatCompact(row.pe.vol)}</td>
+            <td class="${row.pe.oiChange >= 0 ? 'positive' : 'negative'}">${row.pe.oiChange >= 0 ? '+' : ''}${formatCompact(row.pe.oiChange)}${peWall ? '<span class="wall-icon" title="Institutional Support Wall">🛡️</span>' : ''}</td>
             <td class="${peOIHigh ? 'oi-high-pe' : ''}">${formatCompact(row.pe.oi)}</td>
         </tr>`;
     }).join('');
