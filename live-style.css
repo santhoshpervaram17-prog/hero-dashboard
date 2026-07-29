@@ -438,8 +438,7 @@ body {
    Option Chain Panel
    =========================== */
 .chain-panel {
-    grid-row: 1;
-    grid-column: 2;
+    /* Flow naturally */
 }
 
 .chain-controls {
@@ -806,8 +805,7 @@ body {
    Greeks & Analysis Panel
    =========================== */
 .greeks-panel {
-    grid-row: 2;
-    grid-column: 2;
+    /* Flow naturally */
 }
 
 .greek-tabs {
