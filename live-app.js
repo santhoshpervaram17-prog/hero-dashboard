@@ -76,9 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chartData = []; // Empty until real data arrives
         
         initIndexTabs();
-        initChart();
-        initStrategyMonitor();
-        initGreeksPanel();
         initBrokerModal(); // This will trigger startFyersLiveFeed()
     } else {
         // ====== SIMULATION MODE (demo/offline) ======
@@ -89,10 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         initMarketData(); // Generate fake chart data
         initIndexTabs();
-        initChart();
         initOptionChain();
-        initStrategyMonitor();
-        initGreeksPanel();
         initBrokerModal();
         startLiveFeed(); // Start simulation
     }
@@ -247,13 +241,14 @@ function startLiveFeed() {
 
 function updateUI() {
     updateTopBar();
-    updateChartFooter();
-    drawChart();
     updateOptionChain();
-    updateGreeks();
-    drawOIChart();
-    updateStrategies();
     updateHeroSignals();
+    
+    const lastRefreshedEl = document.getElementById('last-refreshed');
+    if (lastRefreshedEl) {
+        const now = new Date();
+        lastRefreshedEl.textContent = `(Last updated: ${now.toLocaleTimeString('en-IN', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' })})`;
+    }
 }
 
 // ===========================
@@ -1023,10 +1018,18 @@ function updateHeroSignals() {
     const pcrBullish = pcr > 1.0;
     const vixNeutral = vix > 13 && vix < 18;
     
+    // Check VWAP (approximate using (H+L+C)/3 for index, or directly if available)
+    const high = idx.high || idx.spot;
+    const low = idx.low || idx.spot;
+    const vwap = (high + low + idx.spot) / 3;
+    const aboveVWAP = idx.spot > vwap;
+    
     let bullishScore = 50;
-    if (priceUp) bullishScore += 20;
+    if (priceUp) bullishScore += 10;
     if (pcrBullish) bullishScore += 10;
     if (vix < 14) bullishScore += 5;
+    if (aboveVWAP) bullishScore += 15;
+    
     // Only add random jitter during live simulation in market hours
     if (!isConnectedToFyers && isMarketOpen()) {
         bullishScore += (Math.random() - 0.5) * 5;
@@ -1036,67 +1039,82 @@ function updateHeroSignals() {
     const isBullish = bullishScore > 50;
     
     const confidence = Math.round(bullishScore > 50 ? bullishScore : 100 - bullishScore);
-    document.getElementById('hero-confidence').textContent = `${confidence}% Confidence`;
+    document.getElementById('signal-score').textContent = `${confidence}% Confidence`;
     
-    const predSide = document.getElementById('pred-side');
-    predSide.textContent = isBullish ? 'CALLS (CE)' : 'PUTS (PE)';
-    predSide.className = `prediction-side ${isBullish ? '' : 'bearish-pred'}`;
+    const predSide = document.getElementById('signal-direction');
+    if (predSide) {
+        predSide.innerHTML = `
+            <span class="direction-text ${isBullish ? '' : 'bearish-text'}">${isBullish ? 'CALLS (CE)' : 'PUTS (PE)'}</span>
+            <span class="direction-desc">${isBullish ? 'Strong support building, upward momentum.' : 'Heavy resistance, downward pressure.'}</span>
+        `;
+    }
     
     // Update factor meters
-    document.getElementById('factor-oi').style.width = `${isBullish ? 65 : 35}%`;
-    document.getElementById('factor-oi').className = `meter-fill ${isBullish ? 'bullish' : 'bearish'}`;
-    document.getElementById('factor-oi-label').textContent = isBullish ? 'Bullish' : 'Bearish';
-    document.getElementById('factor-oi-label').className = `factor-label ${isBullish ? 'bullish-label' : 'bearish-label'}`;
+    const updateFactor = (id, condition, bullishText, bearishText, neutralText = 'Neutral') => {
+        const el = document.getElementById(`fb-${id}`);
+        const lbl = document.getElementById(`fs-${id}`);
+        if (!el || !lbl) return;
+        
+        if (condition === true) {
+            el.style.width = '70%';
+            el.className = 'factor-bar bullish';
+            lbl.textContent = bullishText;
+            lbl.className = 'factor-status bullish-label';
+        } else if (condition === false) {
+            el.style.width = '30%';
+            el.className = 'factor-bar bearish';
+            lbl.textContent = bearishText;
+            lbl.className = 'factor-status bearish-label';
+        } else {
+            el.style.width = '50%';
+            el.className = 'factor-bar';
+            lbl.textContent = neutralText;
+            lbl.className = 'factor-status';
+        }
+    };
     
-    document.getElementById('factor-pcr').style.width = `${pcrBullish ? 58 : 42}%`;
-    document.getElementById('factor-pcr').className = `meter-fill ${pcrBullish ? 'bullish' : 'bearish'}`;
-    document.getElementById('factor-pcr-label').textContent = pcrBullish ? 'Mildly Bullish' : 'Mildly Bearish';
-    
-    document.getElementById('factor-price').style.width = `${priceUp ? 70 : 30}%`;
-    document.getElementById('factor-price').className = `meter-fill ${priceUp ? 'bullish' : 'bearish'}`;
-    document.getElementById('factor-price-label').textContent = priceUp ? 'Bullish' : 'Bearish';
-    document.getElementById('factor-price-label').className = `factor-label ${priceUp ? 'bullish-label' : 'bearish-label'}`;
+    updateFactor('oi', isBullish, 'Bullish', 'Bearish');
+    updateFactor('pcr', pcrBullish, 'Mildly Bullish', 'Mildly Bearish');
+    updateFactor('price', priceUp, 'Bullish', 'Bearish');
+    updateFactor('vwap', aboveVWAP, 'Above VWAP (Bullish)', 'Below VWAP (Bearish)');
 
-    const vixEl = document.getElementById('factor-vix');
-    const vixLbl = document.getElementById('factor-vix-label');
+    const vixEl = document.getElementById('fb-vix');
+    const vixLbl = document.getElementById('fs-vix');
     if (vixEl && vixLbl) {
         const isVixCalm = vix < 15;
         vixEl.style.width = `${Math.min(100, Math.max(20, (vix / 30) * 100))}%`;
-        vixEl.className = `meter-fill ${isVixCalm ? 'bullish' : (vix > 18 ? 'bearish' : 'neutral')}`;
+        vixEl.className = `factor-bar ${isVixCalm ? 'bullish' : (vix > 18 ? 'bearish' : '')}`;
         vixLbl.textContent = isVixCalm ? 'Calm / Favorable' : (vix > 18 ? 'High Volatility' : 'Neutral');
-        vixLbl.className = `factor-label ${isVixCalm ? 'bullish-label' : (vix > 18 ? 'bearish-label' : '')}`;
+        vixLbl.className = `factor-status ${isVixCalm ? 'bullish-label' : (vix > 18 ? 'bearish-label' : '')}`;
     }
 
-    const unwindEl = document.getElementById('factor-unwind');
-    const unwindLbl = document.getElementById('factor-unwind-label');
+    const unwindEl = document.getElementById('fb-unwind');
+    const unwindLbl = document.getElementById('fs-unwind');
     if (unwindEl && unwindLbl && typeof chainDataCache !== 'undefined' && chainDataCache && chainDataCache.length > 0) {
         const totalCeChg = chainDataCache.reduce((sum, r) => sum + (r.ce.oiChange || 0), 0);
         const totalPeChg = chainDataCache.reduce((sum, r) => sum + (r.pe.oiChange || 0), 0);
         const isUnwindingBullish = totalPeChg >= totalCeChg;
-        unwindEl.style.width = `${isUnwindingBullish ? 65 : 35}%`;
-        unwindEl.className = `meter-fill ${isUnwindingBullish ? 'bullish' : 'bearish'}`;
+        unwindEl.style.width = `${isUnwindingBullish ? 70 : 30}%`;
+        unwindEl.className = `factor-bar ${isUnwindingBullish ? 'bullish' : 'bearish'}`;
         unwindLbl.textContent = isUnwindingBullish ? 'Call Unwinding' : 'Put Selling / Unwinding';
-        unwindLbl.className = `factor-label ${isUnwindingBullish ? 'bullish-label' : 'bearish-label'}`;
+        unwindLbl.className = `factor-status ${isUnwindingBullish ? 'bullish-label' : 'bearish-label'}`;
     }
 
-    const reasonEl = document.getElementById('pred-reason');
-    if (reasonEl) {
-        reasonEl.textContent = `Based on: ${isBullish ? 'Strong Put OI Support & Call Unwinding' : 'Call OI Resistance & Put Writing Pressure'}, PCR at ${pcr.toFixed(2)}, VIX at ${vix.toFixed(2)}`;
-    }
-    
     // Recommended strategy
-    const rec = document.getElementById('recommended-strategy');
+    const rec = document.getElementById('rec-strategy');
     const { atmStrike } = getStrikes();
     const gap = MARKET[activeIndex].strikeGap;
     
-    if (isBullish && confidence > 65) {
-        rec.innerHTML = `<span class="rec-label">Recommended Strategy:</span><span class="rec-value">Bull Call Spread (${formatNum(atmStrike)} / ${formatNum(atmStrike + gap * 4)})</span>`;
-    } else if (!isBullish && confidence > 65) {
-        rec.innerHTML = `<span class="rec-label">Recommended Strategy:</span><span class="rec-value">Bear Put Spread (${formatNum(atmStrike)} / ${formatNum(atmStrike - gap * 4)})</span>`;
-    } else if (vix > 16) {
-        rec.innerHTML = `<span class="rec-label">Recommended Strategy:</span><span class="rec-value">Hedged Straddle (${formatNum(atmStrike)} ± ${formatNum(gap * 4)})</span>`;
-    } else {
-        rec.innerHTML = `<span class="rec-label">Recommended Strategy:</span><span class="rec-value">Iron Condor (${formatNum(atmStrike - gap * 4)} – ${formatNum(atmStrike + gap * 4)})</span>`;
+    if (rec) {
+        if (isBullish && confidence > 65) {
+            rec.innerHTML = `<span style="color:var(--green)">Bull Call Spread (${formatNum(atmStrike)} / ${formatNum(atmStrike + gap * 4)})</span>`;
+        } else if (!isBullish && confidence > 65) {
+            rec.innerHTML = `<span style="color:var(--red)">Bear Put Spread (${formatNum(atmStrike)} / ${formatNum(atmStrike - gap * 4)})</span>`;
+        } else if (vix > 16) {
+            rec.innerHTML = `<span style="color:var(--text-muted)">Hedged Straddle (${formatNum(atmStrike)} ± ${formatNum(gap * 4)})</span>`;
+        } else {
+            rec.innerHTML = `<span style="color:var(--text-muted)">Iron Condor (${formatNum(atmStrike - gap * 4)} – ${formatNum(atmStrike + gap * 4)})</span>`;
+        }
     }
 }
 

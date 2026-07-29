@@ -62,60 +62,13 @@
 <!-- Main Dashboard Grid -->
 <main class="dashboard">
 
-    <!-- Left Panel: Live Chart -->
-    <section class="panel chart-panel">
-        <div class="panel-header">
-            <h2>
-                <span id="chart-index-name">NIFTY 50</span>
-                <span class="live-dot"></span>
-            </h2>
-            <div class="chart-controls">
-                <button class="chart-tf active" data-tf="1m">1m</button>
-                <button class="chart-tf" data-tf="5m">5m</button>
-                <button class="chart-tf" data-tf="15m">15m</button>
-            </div>
-        </div>
-        <div class="chart-container">
-            <canvas id="live-chart"></canvas>
-            <div class="chart-overlay">
-                <div class="chart-crosshair-info" id="crosshair-info" style="display:none;">
-                    <span class="ch-price"></span>
-                    <span class="ch-time"></span>
-                </div>
-            </div>
-        </div>
-        <div class="chart-footer">
-            <div class="chart-stat">
-                <span class="cs-label">Open</span>
-                <span class="cs-value" id="stat-open">24,625.20</span>
-            </div>
-            <div class="chart-stat">
-                <span class="cs-label">High</span>
-                <span class="cs-value positive" id="stat-high">24,748.90</span>
-            </div>
-            <div class="chart-stat">
-                <span class="cs-label">Low</span>
-                <span class="cs-value negative" id="stat-low">24,592.10</span>
-            </div>
-            <div class="chart-stat">
-                <span class="cs-label">LTP</span>
-                <span class="cs-value" id="stat-ltp">24,712.50</span>
-            </div>
-            <div class="chart-stat">
-                <span class="cs-label">Day Range</span>
-                <span class="cs-value" id="stat-range">156.80</span>
-            </div>
-            <div class="chart-stat">
-                <span class="cs-label">Max Pain</span>
-                <span class="cs-value blue" id="stat-maxpain">24,700</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Right Panel: Option Chain -->
+    <!-- Left Panel: Option Chain -->
     <section class="panel chain-panel">
         <div class="panel-header">
-            <h2>Option Chain <span class="live-dot"></span></h2>
+            <h2>
+                Option Chain <span class="live-dot"></span>
+                <span id="last-refreshed" style="font-size: 11px; color: var(--text-muted); font-weight: 400; margin-left: 8px;"></span>
+            </h2>
             <div class="chain-controls">
                 <select id="expiry-select" class="chain-select">
                     <option value="weekly">Current Expiry (Weekly)</option>
@@ -158,101 +111,85 @@
         <div class="chain-summary">
             <div class="summary-item">
                 <span class="sum-label">Total CE OI</span>
-                <span class="sum-value" id="total-ce-oi">12,45,300</span>
+                <span class="sum-value" id="total-ce-oi">--</span>
             </div>
             <div class="summary-item">
                 <span class="sum-label">Total PE OI</span>
-                <span class="sum-value" id="total-pe-oi">13,92,100</span>
+                <span class="sum-value" id="total-pe-oi">--</span>
             </div>
             <div class="summary-item">
                 <span class="sum-label">PCR (OI)</span>
-                <span class="sum-value highlight" id="pcr-oi">1.12</span>
+                <span class="sum-value highlight" id="pcr-oi">--</span>
             </div>
             <div class="summary-item">
                 <span class="sum-label">Max Pain</span>
-                <span class="sum-value highlight" id="max-pain-val">24,700</span>
+                <span class="sum-value highlight" id="max-pain-val">--</span>
             </div>
         </div>
     </section>
 
-    <!-- Bottom Left: Strategy Monitor -->
-    <section class="panel strategy-panel">
-        <div class="panel-header">
-            <h2>Strategy Monitor</h2>
-            <button class="add-strategy-btn" id="add-strategy-btn">+ Add Strategy</button>
-        </div>
-
-        <!-- Add Strategy Modal (inline) -->
-        <div class="strategy-builder" id="strategy-builder" style="display:none;">
-            <div class="builder-row">
-                <select id="build-strategy-type" class="chain-select">
-                    <option value="straddle">Long Straddle</option>
-                    <option value="strangle">Long Strangle</option>
-                    <option value="bullcall">Bull Call Spread</option>
-                    <option value="bearput">Bear Put Spread</option>
-                    <option value="ironcondor">Iron Condor</option>
-                    <option value="hedged">Hedged Straddle ★</option>
-                </select>
-                <select id="build-strike" class="chain-select">
-                    <!-- Populated dynamically -->
-                </select>
-                <input type="number" id="build-lots" value="1" min="1" max="50" class="builder-input" placeholder="Lots">
-                <button class="builder-add-btn" id="builder-add-btn">Deploy</button>
-                <button class="builder-cancel-btn" id="builder-cancel-btn">✕</button>
-            </div>
-        </div>
-
-        <div class="active-strategies" id="active-strategies">
-            <!-- Pre-populated demo strategy -->
-        </div>
-
-        <div class="no-strategies" id="no-strategies">
-            <div class="empty-icon">📋</div>
-            <p>No active strategies. Click <strong>+ Add Strategy</strong> to start tracking.</p>
-        </div>
-    </section>
-
-    <!-- Bottom Right: Greeks & Analysis -->
+    <!-- Right Panel: Hero Signals -->
     <section class="panel greeks-panel">
         <div class="panel-header">
-            <h2>Live Greeks & Analysis</h2>
-            <div class="greek-tabs">
-                <button class="greek-tab active" data-tab="greeks">Greeks</button>
-                <button class="greek-tab" data-tab="oi-analysis">OI Analysis</button>
-                <button class="greek-tab" data-tab="hero-signals">Hero Signals</button>
-            </div>
+            <h2>Hero Strike Signals</h2>
         </div>
 
-        <!-- Greeks Tab -->
-        <div class="greek-content active" id="tab-greeks">
-            <div class="greek-selector">
-                <span class="greek-sel-label">Strike:</span>
-                <select id="greek-strike-select" class="chain-select small-select">
-                    <!-- Populated dynamically -->
-                </select>
-            </div>
-            <div class="greeks-grid">
-                <div class="greek-card">
-                    <div class="greek-name">Delta (Δ)</div>
-                    <div class="greek-gauge">
-                        <div class="gauge-bar" id="delta-bar" style="--val:52%"></div>
-                    </div>
-                    <div class="greek-values">
-                        <span class="gv-ce" id="delta-ce">CE: 0.52</span>
-                        <span class="gv-pe" id="delta-pe">PE: -0.48</span>
-                    </div>
-                    <div class="greek-desc">Price sensitivity. How much option price changes per ₹1 move in spot.</div>
+        <div class="greek-content active" id="tab-hero-signals" style="display: block;">
+            <div class="signal-header">
+                <div class="signal-title">
+                    <div class="pulse-icon"></div>
+                    Hero Strike Prediction
                 </div>
-                <div class="greek-card">
-                    <div class="greek-name">Gamma (Γ)</div>
-                    <div class="greek-gauge">
-                        <div class="gauge-bar gamma-bar" id="gamma-bar" style="--val:80%"></div>
-                    </div>
-                    <div class="greek-values">
-                        <span class="gv-ce" id="gamma-ce">CE: 0.0045</span>
-                        <span class="gv-pe" id="gamma-pe">PE: 0.0045</span>
-                    </div>
-                    <div class="greek-desc">Rate of change of Delta. Highest at ATM on expiry day!</div>
+                <div class="signal-confidence">
+                    <span id="signal-score">--</span>
+                </div>
+            </div>
+            
+            <div class="signal-direction" id="signal-direction">
+                <span class="direction-text">WAITING FOR DATA</span>
+                <span class="direction-desc">Analyzing Option Chain, PCR, and Price Action...</span>
+            </div>
+
+            <div class="factors-list">
+                <div class="factor-row">
+                    <span class="factor-name">OI Trend</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-oi" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-oi">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">PCR Ratio</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-pcr" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-pcr">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">VIX Level</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-vix" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-vix">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">Price vs VWAP</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-vwap" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-vwap">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">Price Action</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-price" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-price">Neutral</span>
+                </div>
+                <div class="factor-row">
+                    <span class="factor-name">OI Unwinding</span>
+                    <div class="factor-bar-bg"><div class="factor-bar" id="fb-unwind" style="width:50%; background:var(--text-muted);"></div></div>
+                    <span class="factor-status" id="fs-unwind">None detected</span>
+                </div>
+            </div>
+
+            <div class="strategy-recommendation">
+                <span class="rec-label">Recommended Strategy:</span>
+                <span class="rec-value" id="rec-strategy">None (Sideways)</span>
+            </div>
+        </div>
+    </section>
+</main>
                 </div>
                 <div class="greek-card">
                     <div class="greek-name">Theta (Θ)</div>

@@ -277,8 +277,8 @@ body {
    =========================== */
 .dashboard {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: minmax(340px, 1fr) minmax(320px, 1fr);
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
     gap: 2px;
     padding-top: 52px;
     height: 100vh;
